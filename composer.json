@@ -1,0 +1,25 @@
+{
+  "name": "gmaccario/loose-json-parser",
+  "description": "This is a JSON parser that isn't as strict as the normal JSON libraries",
+  "authors": [
+    {
+      "name": "Giuseppe Maccario",
+      "email": "me@giuseppemaccario.com"
+    }
+  ],
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "php": ">=8.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "LooseJsonParser\\": "src/",
+      "LooseJsonParserTest\\Unit\\Tests": "tests/Unit"
+    }
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.75",
+    "phpunit/phpunit": "^12.1"
+  }
+}
