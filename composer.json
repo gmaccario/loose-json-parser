@@ -1,5 +1,6 @@
 {
   "name": "gmaccario/loose-json-parser",
+  "version": "1.0.0",
   "description": "This is a JSON parser that isn't as strict as the normal JSON libraries",
   "authors": [
     {
