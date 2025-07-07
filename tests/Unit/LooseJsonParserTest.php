@@ -255,6 +255,9 @@ class LooseJsonParserTest extends TestCase
         $this->assertTrue($result);
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testParseBooleanFalseCaseInsensitive(): void
     {
         $result = $this->parse('False');
@@ -295,6 +298,21 @@ class LooseJsonParserTest extends TestCase
     {
         $result = $this->parse('hello-world_123');
         $this->assertSame('hello-world_123', $result);
+    }
+
+    /**
+     * @throws JsonParsingException
+     */
+    public function testParseUnquotedConfusingStrings(): void
+    {
+        $result = $this->parse('123abc');
+        $this->assertSame('123abc', $result);
+
+        $result = $this->parse('true123');
+        $this->assertSame('true123', $result);
+
+        $result = $this->parse('null-value');
+        $this->assertSame('null-value', $result);
     }
 
     /**
@@ -378,6 +396,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnWhitespaceOnlyInput(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -385,6 +406,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('   ');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnUnexpectedCharacter(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -392,6 +416,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('@');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnMissingColon(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -399,6 +426,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('{"name" "John"}');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnMissingClosingBrace(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -406,6 +436,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('{"name": "John"');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnMissingClosingBracket(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -413,6 +446,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('[1, 2, 3');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnUnterminatedString(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -420,6 +456,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('"hello');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnInvalidObjectSeparator(): void
     {
         $this->expectException(JsonParsingException::class);
@@ -427,6 +466,9 @@ class LooseJsonParserTest extends TestCase
         $this->parse('{"name": "John" "age": 30}');
     }
 
+    /**
+     * @throws JsonParsingException
+     */
     public function testThrowsExceptionOnInvalidArraySeparator(): void
     {
         $this->expectException(JsonParsingException::class);

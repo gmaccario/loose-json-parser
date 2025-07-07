@@ -126,7 +126,9 @@ class LooseJsonParser
                 ++$this->pos;
 
                 return $result;
-            } elseif (',' === $char) {
+            }
+
+            if (',' === $char) {
                 ++$this->pos;
                 $this->skipWhitespace();
                 // Handle trailing comma
@@ -179,7 +181,9 @@ class LooseJsonParser
                 ++$this->pos;
 
                 return $result;
-            } elseif (',' === $char) {
+            }
+
+            if (',' === $char) {
                 ++$this->pos;
                 $this->skipWhitespace();
                 // Handle trailing comma

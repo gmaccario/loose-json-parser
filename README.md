@@ -1,78 +1,178 @@
 # Loose JSON Parser
 
-This is a JSON parser that isn't as strict as the normal JSON libraries. (quote by LooseJSON)
+A flexible JSON parser for PHP that handles malformed and non-standard JSON syntax.
 
-Inspired by https://github.com/FlorianDietz/loosejson
+## Overview: What problem does the library actually solve?
 
-Well... this is a porting of the Florian Dietz library, from Python to PHP.
+This library solves the problem of parsing malformed JSON that doesn't conform to strict JSON standards.
 
-The idea: Hey, look what I shipped this weekend!
-
-I'm joking: The idea is to build a robust and flexible solution for parsing malformed JSON data.
-
-## Project Overview: LooseJSON (forgiving JSON decoder in PHP)
-
-Version 2: Pure Custom Parser
-- Strategy: Complete custom recursive descent parser
-- Philosophy: "Parse everything ourselves from scratch"
-- Complexity: Clean recursive structure with specialized methods
+**Input:** Malformed JSON (missing quotes, trailing comma)
 
 ```
-Input - JSON +++ Wrong: missing quotes, and final comma:
 {
     name: 'Giuseppe',
     age: 38,
 }
+```
 
-Output - PHP:
+**Output:** PHP
+
+```
 [
     "name" => "Giuseppe",
     "age" => 38
 ]
 ```
 
-## 🛠 Installation
+The built-in json_decode() function returns `NULL`
 
 ```
-git clone https://github.com/gmaccario/loose-json-parser.git
-cd loose-json-parser
-composer install
+json_decode("
+    {
+        name: 'Giuseppe',
+        age: 38,
+    }
+    ");
 ```
 
-Or using Composer in your project
+## Installation
 
 ```
 composer require gmaccario/loose-json-parser
+composer install
 ```
 
-## 📦 Example Usage
-Check `sample.php` in the root directory.
+## Requirements
+
+- PHP 8.4 or higher (tested with PHP 8.4.8)
+- No additional extensions required
+
+## Usage
+```
+<?php
+
+use LooseJsonParser\JsonParsingException;
+use LooseJsonParser\LooseJsonParser;
+
+try {
+    $parser = new LooseJsonParser('{name: "John", age: 30,}');
+    $result = $parser->decode();
+    // Returns: ["name" => "John", "age" => 30]
+} catch (JsonParsingException $e) {
+    echo "Parse error: " . $e->getMessage();
+}
+```
+
+## Features
+
+- **Flexible Quoting**: Supports single quotes, double quotes, and unquoted keys
+- **Trailing Commas**: Handles trailing commas in objects and arrays
+- **Mixed Syntax**: Allows mixing of quote types within the same document
+- **Case-Insensitive Primitives**: Supports True/FALSE/NULL variations
+- **Comprehensive Error Handling**: Detailed error messages with position information
+
+## Supported Syntax
+
+### Flexible Quoting
+
+- **Double quotes**: `{"name": "John"}`
+- **Single quotes**: `{'name': 'John'}`
+- **Unquoted keys**: `{name: "John"}`
+- **Mixed syntax**: `{"name": 'John', age: 30}`
+
+### Trailing Commas
+
+- **Objects**: `{name: "John", age: 30,}`
+- **Arrays**: `[1, 2, 3,]`
+
+### Case-Insensitive Primitives
+
+- **Booleans**: `true`, `True`, `TRUE`, `false`, `False`, `FALSE`
+- **Null values**: `null`, `Null`, `NULL`
+
+## Error Handling
+
+The parser throws `JsonParsingException` for invalid syntax with detailed position information.
+
+```
+try {
+    $parser = new LooseJsonParser('invalid json');
+    $result = $parser->decode();
+} catch (JsonParsingException $e) {
+    echo $e->getMessage(); // "Unexpected character: i at position 0"
+}
+```
+
+## Security
+
+- Input validation: Parser validates syntax but doesn't sanitize content
+- Resource limits: No built-in protection against deeply nested structures
+- Recommended: Implement application-level limits for untrusted input
+
+## CRITICAL SECURITY WARNING
+
+This library does NOT provide protection against:
+- JSON bombs (deeply nested structures causing stack overflow)
+- Memory exhaustion attacks
+- Resource consumption attacks
+
+## Contributing
+
+- Fork the repository
+- Create a feature branch
+- Add tests for new functionality
+- Run quality tools: composer run-script quality
+- Submit a pull request
 
 ## TODO
-- Implement Strategy Pattern
+
+### Version 1.1.0
+- [ ] Implement streaming parser for large files
+- [ ] Add configuration options for strict/loose parsing modes (object, array, string, unquote)
+- [ ] Install Churn to keep under control the Cyclomatic complexity
 
 ## Unit Tests
+
 ```
 ./vendor/bin/phpunit --version
 ./vendor/bin/phpunit tests
 ```
 
-### Quality Tools
-#### PHP CS Fixer
+## Quality Tools
+
+### PHP CS Fixer
+
 ```
 PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix src
 PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix tests
 ```
-PHP needs to be a minimum version of PHP 7.4.0 and the maximum version of PHP 8.3.*
-Current PHP version: 8.4.4
-To ignore this requirement please set `PHP_CS_FIXER_IGNORE_ENV`.
+**Note:** PHP CS Fixer currently supports PHP 7.4–8.3, but this project requires PHP 8.4+.
+The `PHP_CS_FIXER_IGNORE_ENV` flag bypasses this version check.
 
-#### PHPStan
+### PHPStan
+
 You can currently choose from 11 levels (0 is the loosest and 10 is the strictest) by passing `-l|--level` to the analysis command.
 ```
 vendor/bin/phpstan analyse -l 8 src tests
 ```
 Currently level 8.
 
-## 📝 License
+## Changelog
+### [1.0.0] - 2025-07-01
+ 
+- Initial release
+- Support for flexible JSON parsing
+- Comprehensive error handling
+
+### [1.0.1] - 2025-07-07
+
+- General improvements in README
+- Minor changes
+
+## Author
+
+Created by [G.Maccario](https://github.com/gmaccario)
+
+## License
+
 Loose JSON Parser is open-source software licensed under [The GNU General Public License version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.en.html).
