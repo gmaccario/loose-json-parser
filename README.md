@@ -39,6 +39,12 @@ cd loose-json-parser
 composer install
 ```
 
+Or using Composer in your project
+
+```
+composer require gmaccario/loose-json-parser
+```
+
 ## 📦 Example Usage
 Check `sample.php` in the root directory.
 
