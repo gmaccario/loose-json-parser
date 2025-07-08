@@ -39,7 +39,6 @@ json_decode("
 
 ```
 composer require gmaccario/loose-json-parser
-composer install
 ```
 
 ## Requirements
